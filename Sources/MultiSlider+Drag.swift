@@ -34,14 +34,20 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         let slideViewLength = slideView.bounds.size(in: orientation)
         var targetPosition = panGesture.location(in: slideView).coordinate(in: orientation)
 
-        // don't cross prev/next thumb and total range
-        targetPosition = boundedDraggedThumbPosition(targetPosition: targetPosition)
-
+        // don't cross prev/next thumb and/or total range
+        targetPosition = shouldOverrideThumbs 
+            ? boundedDraggedOverridingThumbPosition(targetPosition: targetPosition)
+            : boundedDraggedThumbPosition(targetPosition: targetPosition)
+        
         // change corresponding value
         updateDraggedThumbValue(relativeValue: targetPosition / slideViewLength)
 
+        if shouldOverrideThumbs {
+            updateOtherThumbsValues(draggingTargetPosition: targetPositio, slideLength: slideViewLength)
+        }
+
         UIView.animate(withDuration: 0.1) {
-            self.updateDraggedThumbPositionAndLabel()
+            self.updateThumbsPositionAndDraggedLabel()
             self.layoutIfNeeded()
         }
     }
@@ -68,6 +74,29 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         }
     }
 
+    /// Check if position that will cross total range without crossing other thumb
+    private func boundedDraggedOverridingThumbPosition(targetPosition: CGFloat) -> CGFloat {
+        var delta: CGFloat = 0 // distance between thumbs in view coordinates
+        if distanceBetweenThumbs < 0 {
+            delta = thumbViews[draggedThumbIndex].frame.size(in: orientation) / 2
+        } else if distanceBetweenThumbs > 0 && distanceBetweenThumbs < maximumValue - minimumValue {
+            delta = (distanceBetweenThumbs / (maximumValue - minimumValue)) * slideView.bounds.size(in: orientation)
+        }
+        if orientation == .horizontal { delta = -delta }
+
+        let bottomLimit = draggedThumbIndex > 0
+            ? slideView.bounds.bottom(in: orientation) - (thumbViews[draggedThumbIndex - 1].center.coordinate(in: orientation) - delta)
+            : slideView.bounds.bottom(in: orientation)
+        let topLimit = draggedThumbIndex < thumbViews.count - 1
+            ? slideView.bounds.top(in: orientation) + (thumbViews[draggedThumbIndex + 1].center.coordinate(in: orientation) + delta)
+            : slideView.bounds.top(in: orientation)
+        if orientation == .vertical {
+            return min(bottomLimit, max(targetPosition, topLimit))
+        } else {
+            return max(bottomLimit, min(targetPosition, topLimit))
+        }
+    }
+
     private func updateDraggedThumbValue(relativeValue: CGFloat) {
         var newValue = relativeValue * (maximumValue - minimumValue)
         if orientation == .vertical {
@@ -84,10 +113,57 @@ extension MultiSlider: UIGestureRecognizerDelegate {
             selectionFeedbackGenerator.generateFeedback()
         }
         if isContinuous { sendActions(for: [.valueChanged, .primaryActionTriggered]) }
+    }    
+    
+    private func updateOtherThumbsValues(draggingTargetPosition: CGFloat, slideLength: CGFloat) {
+        var delta: CGFloat = 0 // distance between thumbs in view coordinates
+        if distanceBetweenThumbs < 0 {
+            delta = thumbViews[draggedThumbIndex].frame.size(in: orientation) / 2
+        } else if distanceBetweenThumbs > 0 && distanceBetweenThumbs < maximumValue - minimumValue {
+            delta = (distanceBetweenThumbs / (maximumValue - minimumValue)) * slideView.bounds.size(in: orientation)
+        }
+        if orientation == .horizontal { delta = -delta }
+
+        thumbViews.enumerated().forEach { (index, thumbView) in
+            var otherTumbTargetPosition = thumbView.center.coordinate(in: orientation)
+            guard index != draggedThumbIndex,
+                !(otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta).contains(draggingTargetPosition) else { return }
+
+            let bottomLimit = index > 0
+                ? slideView.bounds.bottom(in: orientation) - (thumbViews[index - 1].center.coordinate(in: orientation) - delta)
+                : slideView.bounds.bottom(in: orientation)
+            let topLimit = index < thumbViews.count - 1
+                ? slideView.bounds.top(in: orientation) + (thumbViews[index + 1].center.coordinate(in: orientation) + delta)
+                : slideView.bounds.top(in: orientation)
+            if orientation == .vertical {
+                otherTumbTargetPosition = min(bottomLimit, max(otherTumbTargetPosition, topLimit))
+            } else {
+                otherTumbTargetPosition = max(bottomLimit, min(otherTumbTargetPosition, topLimit))
+            }
+
+            let relativeValue = otherTumbTargetPosition / slideLength
+
+            var newValue = relativeValue * (maximumValue - minimumValue)
+            if orientation == .vertical {
+                newValue = maximumValue - newValue
+            } else {
+                newValue += minimumValue
+            }
+            newValue = snap.snap(value: newValue)
+            guard newValue != value[index] else { return }
+            isSettingValue = true
+            value[index] = newValue
+            isSettingValue = false
+            if (isHapticSnap && (snap != .never)) || relativeValue == 0 || relativeValue == 1 {
+                selectionFeedbackGenerator.generateFeedback()
+            }
+            if isContinuous { sendActions(for: [.valueChanged, .primaryActionTriggered]) }
+        }
     }
 
-    private func updateDraggedThumbPositionAndLabel() {
-        positionThumbView(draggedThumbIndex)
+    private func updateThumbsPositionAndDraggedLabel() {
+        // positionThumbView(draggedThumbIndex)
+        positionThumbViews()
         if draggedThumbIndex < valueLabels.count {
             updateValueLabel(draggedThumbIndex)
             if isValueLabelRelative && draggedThumbIndex + 1 < valueLabels.count {
