@@ -63,6 +63,9 @@ open class MultiSlider: UIControl {
         }
     }
 
+    /// Allow to move/override thumbs being dragged by
+    @IBInspectable open dynamic var shouldOverrideThumbs: Bool = true
+
     // MARK: - Snap to Discrete Values
 
     /// snap thumbs to specific values, evenly spaced. (default = 0: allow any value)

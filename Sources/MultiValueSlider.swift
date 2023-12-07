@@ -38,6 +38,7 @@ import SwiftUI
         hasRoundTrackEnds: Bool? = nil,
         distanceBetweenThumbs: CGFloat? = nil,
         keepsDistanceBetweenThumbs: Bool? = nil,
+        shouldOverrideThumbs: Bool? = nil,
         valueLabelFormatter: NumberFormatter? = nil
     ) {
         _value = value
@@ -62,6 +63,7 @@ import SwiftUI
         uiView.hasRoundTrackEnds =? hasRoundTrackEnds
         uiView.distanceBetweenThumbs =? distanceBetweenThumbs
         uiView.keepsDistanceBetweenThumbs =? keepsDistanceBetweenThumbs
+        uiView.shouldOverrideThumbs =? shouldOverrideThumbs
         uiView.valueLabelFormatter =? valueLabelFormatter
     }
 
@@ -215,6 +217,11 @@ import SwiftUI
 
     func keepsDistanceBetweenThumbs(_ value: Bool) -> Self {
         uiView.keepsDistanceBetweenThumbs = value
+        return self
+    }
+
+    func shouldOverrideThumbs(_ value: Bool) -> Self {
+        uiView.shouldOverrideThumbs = value
         return self
     }
 
