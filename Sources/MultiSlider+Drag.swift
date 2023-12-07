@@ -127,7 +127,7 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         thumbViews.enumerated().forEach { (index, thumbView) in
             var otherTumbTargetPosition = thumbView.center.coordinate(in: orientation)
             guard index != draggedThumbIndex,
-                !(otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta).contains(draggingTargetPosition) else { return }
+                !((otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta)).contains(draggingTargetPosition) else { return }
 
             let bottomLimit = index > 0
                 ? slideView.bounds.bottom(in: orientation) - (thumbViews[index - 1].center.coordinate(in: orientation) - delta)
