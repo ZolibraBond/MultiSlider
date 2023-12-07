@@ -262,6 +262,12 @@ extension MultiSlider {
         position(marker: thumbViews[i], at: value[i])
     }
 
+    func positionThumbViews() {
+        thumbViews.enumerated().forEach { (index, thumbView) in
+            position(marker: thumbView, at: value[index]) 
+        }
+    }
+
     private func position(marker: UIView, at value: CGFloat) {
         guard let containerView = marker.superview else { return }
         containerView.removeFirstConstraint { $0.firstItem === marker && $0.firstAttribute == .center(in: orientation) }
