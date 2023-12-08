@@ -127,7 +127,7 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         thumbViews.enumerated().forEach { (index, thumbView) in
             var otherTumbTargetPosition = thumbView.center.coordinate(in: orientation)
             guard index != draggedThumbIndex,
-                !((otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta)).contains(draggingTargetPosition) else {
+                ((otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta)).contains(draggingTargetPosition) else {
                     print("Not updating thumb with Index \(index) in position \(otherTumbTargetPosition) | With delta \(delta) and dragging position \(draggingTargetPosition)")
                     return 
                 }
