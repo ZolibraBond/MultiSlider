@@ -59,7 +59,7 @@ extension MultiSlider: UIGestureRecognizerDelegate {
 
     /// adjusted position that doesn't cross prev/next thumb and total range
     private func boundedDraggedThumbPosition(targetPosition: CGFloat) -> CGFloat {
-        let delta = distanceThumbsCoordinates() // distance between thumbs in view coordinates
+        var delta = distanceThumbsCoordinates() // distance between thumbs in view coordinates
         if orientation == .horizontal { delta = -delta }
 
         let bottomLimit = draggedThumbIndex > 0
@@ -77,7 +77,7 @@ extension MultiSlider: UIGestureRecognizerDelegate {
 
     /// Check if position that will cross total range without crossing other thumb
     private func boundedDraggedOverridingThumbPosition(targetPosition: CGFloat) -> CGFloat {
-        let delta = distanceThumbsCoordinates() // distance between thumbs in view coordinates
+        var delta = distanceThumbsCoordinates() // distance between thumbs in view coordinates
         if orientation == .horizontal { delta = -delta }
 
         let bottomLimit = draggedThumbIndex > 0
@@ -112,7 +112,7 @@ extension MultiSlider: UIGestureRecognizerDelegate {
     }    
     
     private func updateOtherThumbsValues(draggingTargetPosition: CGFloat, slideLength: CGFloat) {
-        let delta = distanceThumbsCoordinates() // distance between thumbs in view coordinates
+        var delta = distanceThumbsCoordinates() // distance between thumbs in view coordinates
         if orientation == .horizontal { delta = -delta }
 
         thumbViews.enumerated().forEach { (index, thumbView) in
