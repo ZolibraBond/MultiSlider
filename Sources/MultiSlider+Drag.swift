@@ -132,6 +132,8 @@ extension MultiSlider: UIGestureRecognizerDelegate {
                     return 
                 }
 
+            print("DO UPDATING thumb with Index \(index) in position \(otherTumbTargetPosition) | dragging position \(draggingTargetPosition)")
+
             // Comming down from top
             if index > draggedThumbIndex {
                 otherTumbTargetPosition = draggingTargetPosition - delta
