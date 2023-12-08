@@ -127,19 +127,29 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         thumbViews.enumerated().forEach { (index, thumbView) in
             var otherTumbTargetPosition = thumbView.center.coordinate(in: orientation)
             guard index != draggedThumbIndex,
-                !((otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta)).contains(draggingTargetPosition) else { return }
+                !((otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta)).contains(draggingTargetPosition) else {
+                    print("Not updating thumb with Index \(index) in position \(otherTumbTargetPosition)")
+                    return 
+                }
 
-            let bottomLimit = index > 0
-                ? slideView.bounds.bottom(in: orientation) - (thumbViews[index - 1].center.coordinate(in: orientation) - delta)
-                : slideView.bounds.bottom(in: orientation)
-            let topLimit = index < thumbViews.count - 1
-                ? slideView.bounds.top(in: orientation) + (thumbViews[index + 1].center.coordinate(in: orientation) + delta)
-                : slideView.bounds.top(in: orientation)
-            if orientation == .vertical {
-                otherTumbTargetPosition = min(bottomLimit, max(otherTumbTargetPosition, topLimit))
+            // Comming down from top
+            if index > draggedThumbIndex {
+                otherTumbTargetPosition = draggingTargetPosition + delta
             } else {
-                otherTumbTargetPosition = max(bottomLimit, min(otherTumbTargetPosition, topLimit))
+                otherTumbTargetPosition = draggingTargetPosition - delta
             }
+            
+            // let bottomLimit = index > 0
+            //     ? slideView.bounds.bottom(in: orientation) - (thumbViews[index - 1].center.coordinate(in: orientation) - delta)
+            //     : slideView.bounds.bottom(in: orientation)
+            // let topLimit = index < thumbViews.count - 1
+            //     ? slideView.bounds.top(in: orientation) + (thumbViews[index + 1].center.coordinate(in: orientation) + delta)
+            //     : slideView.bounds.top(in: orientation)
+            // if orientation == .vertical {
+            //     otherTumbTargetPosition = min(bottomLimit, max(otherTumbTargetPosition, topLimit))
+            // } else {
+            //     otherTumbTargetPosition = max(bottomLimit, min(otherTumbTargetPosition, topLimit))
+            // }
 
             let relativeValue = otherTumbTargetPosition / slideLength
 
