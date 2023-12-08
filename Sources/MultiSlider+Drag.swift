@@ -140,18 +140,6 @@ extension MultiSlider: UIGestureRecognizerDelegate {
             } else {
                 otherTumbTargetPosition = draggingTargetPosition + delta
             }
-            
-            // let bottomLimit = index > 0
-            //     ? slideView.bounds.bottom(in: orientation) - (thumbViews[index - 1].center.coordinate(in: orientation) - delta)
-            //     : slideView.bounds.bottom(in: orientation)
-            // let topLimit = index < thumbViews.count - 1
-            //     ? slideView.bounds.top(in: orientation) + (thumbViews[index + 1].center.coordinate(in: orientation) + delta)
-            //     : slideView.bounds.top(in: orientation)
-            // if orientation == .vertical {
-            //     otherTumbTargetPosition = min(bottomLimit, max(otherTumbTargetPosition, topLimit))
-            // } else {
-            //     otherTumbTargetPosition = max(bottomLimit, min(otherTumbTargetPosition, topLimit))
-            // }
 
             let relativeValue = otherTumbTargetPosition / slideLength
 
