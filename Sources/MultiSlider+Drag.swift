@@ -20,9 +20,10 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         draggedThumbIndex = closestThumb(point: location)
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive event: UIEvent) -> Bool {
-        guard let location = touches.first?.location(in: slideView) else { return }
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        let location = touch.location(in: slideView)
         draggedThumbIndex = closestThumb(point: location)
+        return true
     }
 
     @objc open func didDrag(_ panGesture: UIPanGestureRecognizer) {
