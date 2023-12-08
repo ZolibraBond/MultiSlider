@@ -14,6 +14,7 @@ extension MultiSlider {
         slideView.layoutMargins = .zero
         setupOrientation()
         setupPanGesture()
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap(_:))))
 
         isAccessibilityElement = true
         accessibilityIdentifier = "multi_slider"
