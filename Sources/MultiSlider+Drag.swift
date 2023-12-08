@@ -128,15 +128,15 @@ extension MultiSlider: UIGestureRecognizerDelegate {
             var otherTumbTargetPosition = thumbView.center.coordinate(in: orientation)
             guard index != draggedThumbIndex,
                 !((otherTumbTargetPosition - delta)...(otherTumbTargetPosition + delta)).contains(draggingTargetPosition) else {
-                    print("Not updating thumb with Index \(index) in position \(otherTumbTargetPosition)")
+                    print("Not updating thumb with Index \(index) in position \(otherTumbTargetPosition) | With delta \(delta) and dragging position \(draggingTargetPosition)")
                     return 
                 }
 
             // Comming down from top
             if index > draggedThumbIndex {
-                otherTumbTargetPosition = draggingTargetPosition + delta
-            } else {
                 otherTumbTargetPosition = draggingTargetPosition - delta
+            } else {
+                otherTumbTargetPosition = draggingTargetPosition + delta
             }
             
             // let bottomLimit = index > 0
