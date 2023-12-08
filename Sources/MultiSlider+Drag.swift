@@ -154,6 +154,7 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         } else if distanceBetweenThumbs > 0 && distanceBetweenThumbs < maximumValue - minimumValue {
             return (distanceBetweenThumbs / (maximumValue - minimumValue)) * slideView.bounds.size(in: orientation)
         }
+        return 0
     }
 
     private func updateThumbsPositionAndDraggedLabel() {
