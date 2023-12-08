@@ -14,7 +14,6 @@ extension MultiSlider {
         slideView.layoutMargins = .zero
         setupOrientation()
         setupPanGesture()
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap(_:))))
 
         isAccessibilityElement = true
         accessibilityIdentifier = "multi_slider"
@@ -37,6 +36,8 @@ extension MultiSlider {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didDrag(_:)))
         panGesture.delegate = self
         panGestureView.addGestureRecognizer(panGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap(_:)))
+        panGestureView.addGestureRecognizer(tapGesture)
     }
 
     func setupOrientation() {
