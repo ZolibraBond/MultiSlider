@@ -15,11 +15,6 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         return panOrientation != orientation
     }
     
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let location = touches.first?.location(in: slideView) else { return }
-        draggedThumbIndex = closestThumb(point: location)
-    }
-    
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         let location = touch.location(in: slideView)
         draggedThumbIndex = closestThumb(point: location)
@@ -31,8 +26,8 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         case .began:
             if isHapticSnap { selectionFeedbackGenerator.prepare() }
             // determine thumb to drag
-            let location = panGesture.location(in: slideView)
-            draggedThumbIndex = closestThumb(point: location)
+            // let location = panGesture.location(in: slideView)
+            // draggedThumbIndex = closestThumb(point: location)
         case .ended, .cancelled, .failed:
             if isHapticSnap { selectionFeedbackGenerator.end() }
             sendActions(for: .touchUpInside) // no bounds check for now (.touchUpInside vs .touchUpOutside)
