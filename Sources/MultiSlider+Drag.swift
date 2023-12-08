@@ -16,12 +16,12 @@ extension MultiSlider: UIGestureRecognizerDelegate {
     }
     
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let location = tapGesture.location(in: slideView)
+        guard let location = touches.first?.location(in: slideView) else { return }
         draggedThumbIndex = closestThumb(point: location)
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive event: UIEvent) -> Bool {
-        let location = tapGesture.location(in: slideView)
+        guard let location = touches.first?.location(in: slideView) else { return }
         draggedThumbIndex = closestThumb(point: location)
     }
 
