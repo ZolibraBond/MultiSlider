@@ -53,7 +53,7 @@ extension MultiSlider: UIGestureRecognizerDelegate {
     }
 
     @objc open func didTap(_ tapGesture: UITapGestureRecognizer) {
-        let location = panGesture.location(in: slideView)
+        let location = tapGesture.location(in: slideView)
         draggedThumbIndex = closestThumb(point: location)
     }
 
