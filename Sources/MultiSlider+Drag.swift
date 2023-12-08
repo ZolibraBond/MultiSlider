@@ -14,6 +14,10 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         let panOrientation: NSLayoutConstraint.Axis = abs(velocity.y) > abs(velocity.x) ? .vertical : .horizontal
         return panOrientation != orientation
     }
+    
+    open override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        return true
+    }
 
     @objc open func didDrag(_ panGesture: UIPanGestureRecognizer) {
         switch panGesture.state {
@@ -50,11 +54,6 @@ extension MultiSlider: UIGestureRecognizerDelegate {
             self.updateThumbsPositionAndDraggedLabel()
             self.layoutIfNeeded()
         }
-    }
-
-    @objc open func didTap(_ tapGesture: UITapGestureRecognizer) {
-        let location = tapGesture.location(in: slideView)
-        draggedThumbIndex = closestThumb(point: location)
     }
 
     /// adjusted position that doesn't cross prev/next thumb and total range

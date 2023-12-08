@@ -36,8 +36,6 @@ extension MultiSlider {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didDrag(_:)))
         panGesture.delegate = self
         panGestureView.addGestureRecognizer(panGesture)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap(_:)))
-        panGestureView.addGestureRecognizer(tapGesture)
     }
 
     func setupOrientation() {
